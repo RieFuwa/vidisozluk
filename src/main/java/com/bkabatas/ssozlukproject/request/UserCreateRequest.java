@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class UserCreateRequest {
 
     private Long id ;
-    private String  name;
     private String userName;
     private String userMail;
     private String userPassword;

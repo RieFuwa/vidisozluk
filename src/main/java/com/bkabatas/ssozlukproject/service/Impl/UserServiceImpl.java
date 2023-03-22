@@ -3,14 +3,12 @@ import com.bkabatas.ssozlukproject.model.Role;
 import com.bkabatas.ssozlukproject.model.User;
 import com.bkabatas.ssozlukproject.repository.RoleRepository;
 import com.bkabatas.ssozlukproject.repository.UserRepository;
-import com.bkabatas.ssozlukproject.request.AddRoleByUserCreateRequest;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.service.UserService;
 import com.bkabatas.ssozlukproject.service.RoleService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -31,7 +29,6 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserCreateRequest newUser) {
         User toCreate= new User();
         toCreate.setId(newUser.getId());
-        toCreate.setName(newUser.getName());
         toCreate.setUserName(newUser.getUserName());
         toCreate.setUserMail(newUser.getUserMail());
         toCreate.setRoles(new ArrayList<>());
@@ -76,10 +73,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String userName, String rolName) {
-       User user = userRepository.findByUserName(userName);
-       Role role = roleRepository.findByRoleName(rolName);
-       user.getRoles().add(role);
+    public Object addRoleToUser(Long userId, Long roleId) {
+       User user = userRepository.findById(userId).orElseThrow(()->new RuntimeException("Could not found with id"));
+       Role role = roleRepository.findById(roleId).orElseThrow(()->new RuntimeException("Could not found with id"));;
+       if(role== null && user ==null){
+           return null;
+       }
+       return user.getRoles().add(role);
+
+
     }
 
     @Override

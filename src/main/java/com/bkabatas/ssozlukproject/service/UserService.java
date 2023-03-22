@@ -1,8 +1,6 @@
 package com.bkabatas.ssozlukproject.service;
 import com.bkabatas.ssozlukproject.model.User;
-import com.bkabatas.ssozlukproject.request.AddRoleByUserCreateRequest;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -17,7 +15,7 @@ public interface UserService {
     String deleteUserById(Long userId);
 
     User updateUserById(Long userId, User newUser);
-    void addRoleToUser(String userName,String rolName);
+    Object addRoleToUser(Long userId, Long roleId);
     User getUser(String userName);
 
     /*User addRoleToUser(AddRoleByUserCreateRequest addRoleByUserCreateRequest);*/

@@ -39,7 +39,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResponseEntity<Object> addRoleToUser(AddRoleByUserCreateRequest addRoleByUserCreateRequest) {
-        userService.addRoleToUser(addRoleByUserCreateRequest.getName(),addRoleByUserCreateRequest.getRoleName());
+        userService.addRoleToUser(addRoleByUserCreateRequest.getUserId(),addRoleByUserCreateRequest.getRoleId());
         return ResponseEntity.ok().build();
     }
 }

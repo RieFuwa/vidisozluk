@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AddRoleByUserCreateRequest {
-    private String name;
-    private String roleName;
+    private Long userId;
+    private Long roleId;
 }
