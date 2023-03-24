@@ -1,19 +1,18 @@
 package com.bkabatas.ssozlukproject.dto;
-import com.bkabatas.ssozlukproject.model.User;
 import com.bkabatas.ssozlukproject.model.Role;
+import com.bkabatas.ssozlukproject.model.User;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 @Data
 public class UserDto {
     private Long id;
+
     private String userName;
-    private String userMail;
     private List<Role> roles;
+    private String userMail;
     private Date createDate;
     private Boolean isVerified;
 

@@ -1,15 +1,11 @@
 package com.bkabatas.ssozlukproject.service.Impl;
-import com.bkabatas.ssozlukproject.dto.LikeDto;
-import com.bkabatas.ssozlukproject.dto.PostDto;
+import com.bkabatas.ssozlukproject.dto.*;
 import com.bkabatas.ssozlukproject.model.Post;
 import com.bkabatas.ssozlukproject.model.PostType;
 import com.bkabatas.ssozlukproject.model.User;
 import com.bkabatas.ssozlukproject.repository.PostRepository;
 import com.bkabatas.ssozlukproject.request.PostCreateRequest;
-import com.bkabatas.ssozlukproject.service.LikeService;
-import com.bkabatas.ssozlukproject.service.PostService;
-import com.bkabatas.ssozlukproject.service.PostTypeService;
-import com.bkabatas.ssozlukproject.service.UserService;
+import com.bkabatas.ssozlukproject.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Date;
@@ -27,6 +23,8 @@ public class PostServiceImpl implements PostService {
    private UserService userService;
    @Autowired
    private LikeService likeService;
+   @Autowired
+   private ReportService reportService;
 
 
 
@@ -55,8 +53,9 @@ public class PostServiceImpl implements PostService {
             post = postRepository.findAll();
         return post.stream().map(p -> {
             List<LikeDto> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null), Optional.of(p.getId()));
+            List<ReportDto> reports = reportService.getAllPostReports(Optional.of(p.getId()));
 
-            return new PostDto(p, likes);}).collect(Collectors.toList());
+            return new PostDto(p, likes,reports);}).collect(Collectors.toList());
     }
 
     @Override
@@ -68,16 +67,74 @@ public class PostServiceImpl implements PostService {
             posts= postRepository.findAll();
         return posts.stream().map(p -> {
             List<LikeDto> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null), Optional.of(p.getId()));
+            List<ReportDto> reports = reportService.getAllPostReports(Optional.of(p.getId()));
 
-            return new PostDto(p, likes);}).collect(Collectors.toList());
+            return new PostDto(p, likes,reports);}).collect(Collectors.toList());
     }
 
     @Override
     public PostDto getOnePostByIdWithLikes(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
         List<LikeDto> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null),Optional.of(postId));
-        return new PostDto(post,likes);
+        List<ReportDto> reports = reportService.getAllPostReports(Optional.of(postId));
+
+        return new PostDto(post,likes,reports);
     }
+
+    @Override
+    public List<PostDto> getAllPostTypePost(Optional<Long> postTypeId) {
+        List<Post> post;
+        if(postTypeId.isPresent()){
+            post=postRepository.findByPostTypeId(postTypeId.get());
+        }else
+            post = postRepository.findAll();
+        return post.stream().map(p -> {
+            List<LikeDto> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null), Optional.of(p.getId()));
+            List<ReportDto> reports = reportService.getAllPostReports(Optional.of(p.getId()));
+
+            return new PostDto(p, likes,reports);}).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostDto> getAllPost() {
+        List<Post> post;
+
+            post = postRepository.findAll();
+        return post.stream().map(p -> {
+            List<LikeDto> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null), Optional.of(p.getId()));
+            List<ReportDto> reports = reportService.getAllPostReports(Optional.of(p.getId()));
+
+            return new PostDto(p, likes,reports);}).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostDto> getTodayPost() {
+        List<Post> post;
+
+        post = postRepository.queryPostByCreateDate();
+        return post.stream().map(p -> {
+            List<LikeDto> likes = likeService.getAllLikesWithParam(Optional.ofNullable(null), Optional.of(p.getId()));
+            List<ReportDto> reports = reportService.getAllPostReports(Optional.of(p.getId()));
+
+            return new PostDto(p, likes,reports);}).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostTypeByCountDto> getPostTypeByCount() {
+
+        List<PostTypeByCountDto> postDto = postRepository.queryPostTypeTitleCount();
+
+        return postDto;
+
+    }
+
+    @Override
+    public List<UserTitleCountDto> getUserTitleCount() {
+        List<UserTitleCountDto> postDto = postRepository.queryUserTitleCountDto();
+
+        return postDto;
+    }
+
 
     @Override
     public Post createPost(PostCreateRequest newPost) {

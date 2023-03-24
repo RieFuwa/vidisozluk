@@ -13,6 +13,8 @@ import com.bkabatas.ssozlukproject.service.ReportService;
 import com.bkabatas.ssozlukproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,6 +41,7 @@ public class ReportServiceImpl implements ReportService {
             return null;
         Report toCreate= new Report();
         toCreate.setId(newReport.getId());
+        toCreate.setCreateDate(new Date());
         toCreate.setUser(user);
         toCreate.setPost(post);
         toCreate.setReportText(newReport.getReportText());
@@ -68,7 +71,7 @@ public class ReportServiceImpl implements ReportService {
     public List<ReportDto> getAllPostReports(Optional<Long> postId) {
         List<Report> reports;
         if(postId.isPresent()){
-            reports=reportRepository.findByPostId(postId.get());
+                reports=reportRepository.findByPostId(postId.get());
         }else
             reports = reportRepository.findAll();
         return reports.stream().map(p -> {
