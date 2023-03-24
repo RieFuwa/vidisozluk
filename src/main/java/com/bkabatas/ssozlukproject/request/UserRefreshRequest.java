@@ -3,7 +3,7 @@ package com.bkabatas.ssozlukproject.request;
 import lombok.Data;
 
 @Data
-public class AddRoleByUserCreateRequest {
+public class UserRefreshRequest {
     private Long userId;
-    private Long roleId;
+    private String refreshToken;
 }

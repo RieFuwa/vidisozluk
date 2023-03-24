@@ -6,7 +6,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -25,11 +24,9 @@ public class User {
     })
     @JoinColumn(name = "role_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-
     private List<Role> roles = new ArrayList<>();
 
     private String userName;
-    private String name;
     private String userMail;
     @JsonIgnore
     private String userPassword;

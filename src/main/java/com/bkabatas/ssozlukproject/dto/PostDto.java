@@ -1,6 +1,7 @@
 package com.bkabatas.ssozlukproject.dto;
 import com.bkabatas.ssozlukproject.model.Post;
 import com.bkabatas.ssozlukproject.model.PostType;
+import com.bkabatas.ssozlukproject.model.Report;
 import com.bkabatas.ssozlukproject.model.User;
 import lombok.Data;
 import java.util.Date;
@@ -16,8 +17,9 @@ public class PostDto {
     private String postText;
     private Date createDate;
     private List<LikeDto> likeList;
+    private List<ReportDto> reportlist;
 
-    public PostDto(Post entity, List<LikeDto> likeList){
+    public PostDto(Post entity, List<LikeDto> likeList, List<ReportDto> reportlist){
 
         this.id=entity.getId();
         this.user=entity.getUser();
@@ -29,6 +31,7 @@ public class PostDto {
         this.postText=entity.getPostText();
         this.createDate=entity.getCreateDate();
         this.likeList=likeList;
+        this.reportlist=reportlist;
 
     }
 
