@@ -1,51 +1,20 @@
 package com.bkabatas.ssozlukproject.security;
-<<<<<<< HEAD
 import com.bkabatas.ssozlukproject.service.Impl.UserDetailsServiceImpl;
-=======
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.bkabatas.ssozlukproject.service.Impl.UserDetailsServiceImpl;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
->>>>>>> test
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
-<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-=======
-import org.apache.tomcat.util.buf.UDecoder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
->>>>>>> test
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-<<<<<<< HEAD
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-=======
-import org.springframework.util.SimpleIdGenerator;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static java.util.Arrays.stream;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
->>>>>>> test
 
 
 @Data
@@ -53,10 +22,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //REQUEST GELDIGINDE FILTER ASAMASINDAN GEÇER+ EXTRA BİR AŞAMA KENDİMİZ YAZIYORUZ. JWT FILTER AŞAMASI EKLİYORUZ.
 
-<<<<<<< HEAD
-=======
-
->>>>>>> test
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 

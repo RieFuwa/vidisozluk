@@ -17,10 +17,7 @@ public class JwtTokenProvider {
     private String APP_SECRET; //TOKEN OLUSTURMA
     @Value("${ssozluk.expires.in}")
     private Long EXPIRES_IN; // KAÇ SANIYE TOKEN DEGERİNİ YİTİRİR.
-<<<<<<< HEAD
-=======
 
->>>>>>> test
     private JwtUserDetails jwtUserDetails;
     private UserService userService;
 
@@ -32,19 +29,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(new Date()).setExpiration(expireDate)
                 .claim("roles",userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact();
-<<<<<<< HEAD
-=======
-       /* String access_token = JWT.create()
-                .withSubject(userDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000))
-                .withClaim("roles",userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
-        return access_token;*/
-        /*return Jwts.builder().setSubject(Long.toString(userDetails.getId()))
-                .setIssuedAt(new Date()).setExpiration(expireDate)
-                .claim("userType",userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact(); // TOKEN OLUŞTURMA*/
->>>>>>> test
+
     }
 
     public String generateJwtTokenByUserId(Long userId) {

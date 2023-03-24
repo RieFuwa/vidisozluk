@@ -13,20 +13,10 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByUserId(Long userId);
 
     List<Post> findByConnectedPostId(Long postId);
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> test
 
     List<Post> findByPostTypeId(Long postId);
 
-    @Query(
-<<<<<<< HEAD
-         " SELECT u FROM Post u where u.createDate > current_date -1 ")
-=======
-         "SELECT u FROM Post u where u.createDate > current_date -1 ")
->>>>>>> test
+    @Query(" SELECT u FROM Post u where u.createDate > current_date -1 ")
     List<Post> queryPostByCreateDate();
 
     @Query(" SELECT distinct new com.bkabatas.ssozlukproject.dto.PostTypeByCountDto(PT.postTypeName,P.postType.id,count(P.postType.id)) " +
@@ -43,9 +33,6 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             "U.userMail, " +
             "P.user.id " +
             "ORDER BY COUNT(P.user.id) DESC") List<UserTitleCountDto> queryUserTitleCountDto();
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> test
+
 }
 

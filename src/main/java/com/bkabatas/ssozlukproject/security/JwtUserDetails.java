@@ -1,5 +1,4 @@
 package com.bkabatas.ssozlukproject.security;
-
 import com.bkabatas.ssozlukproject.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
