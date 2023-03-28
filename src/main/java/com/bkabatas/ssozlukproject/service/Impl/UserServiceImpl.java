@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -83,13 +83,13 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
+
     public List<User> getAllUser() {
         return  userRepository.findAll();
     }
 
     @Override
     public User getUserById(Long userId) {
-
         return userRepository.findById(userId).orElse(null);
     }
 

@@ -77,7 +77,7 @@ public class SecurityConfig {
                 .and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(handler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/user/getAll").hasAnyAuthority("ROLE_ADMIN","ROLE_MANAGER")
+                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/user/getAll").permitAll()
                 .requestMatchers(HttpMethod.POST,"/userAuth/**").permitAll()
                 .anyRequest().permitAll();
 

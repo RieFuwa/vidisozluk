@@ -6,6 +6,7 @@ import com.bkabatas.ssozlukproject.model.User;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +29,14 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
+    @Cacheable(value = "User")
     public List<User> getAllUser(){
         return userService.getAllUser();
     }
 
+    /* unless = #userId<10*/
     @GetMapping("/{userId}")
+    @Cacheable(key = "#userId",value = "User")
     public UserDto getUserById(@PathVariable("userId")Long userId){
         User user= userService.getUserById(userId);
         return new UserDto(user);
