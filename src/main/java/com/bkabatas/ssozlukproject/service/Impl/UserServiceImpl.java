@@ -19,6 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.InternetAddressEditor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService {
         toCreate.setCreateDate(new Date());
         toCreate.setUserPassword(passwordEncoder.encode(newUser.getUserPassword()));
         toCreate.setIsVerified(newUser.getIsVerified());
+
          userRepository.save(toCreate);
         userCreateResponse.setMessage("User successfully created.");
         return new ResponseEntity<>(userCreateResponse, HttpStatus.CREATED);
@@ -83,7 +85,6 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
-
     public List<User> getAllUser() {
         return  userRepository.findAll();
     }
