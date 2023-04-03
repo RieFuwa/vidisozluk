@@ -1,8 +1,10 @@
 package com.bkabatas.ssozlukproject.controller;
 import com.bkabatas.ssozlukproject.dto.ReportDto;
+import com.bkabatas.ssozlukproject.dto.UserAuthDto;
 import com.bkabatas.ssozlukproject.dto.UserCreateResponse;
 import com.bkabatas.ssozlukproject.dto.UserDto;
 import com.bkabatas.ssozlukproject.model.User;
+import com.bkabatas.ssozlukproject.request.UserAuthRequest;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<Void> createUser(@RequestBody UserCreateRequest newUser) {
-        ResponseEntity<UserCreateResponse> user = userService.createUser(newUser);
-        if(user != null)
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public  ResponseEntity<UserCreateResponse> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+        return userService.createUser(userCreateRequest);
+
     }
 
     @GetMapping("/getAll")
@@ -37,9 +37,8 @@ public class UserController {
     /* unless = #userId<10*/
     @GetMapping("/{userId}")
     @Cacheable(key = "#userId",value = "User")
-    public UserDto getUserById(@PathVariable("userId")Long userId){
-        User user= userService.getUserById(userId);
-        return new UserDto(user);
+    public User getUserById(@PathVariable("userId")Long userId){
+        return userService.getUserById(userId);
     }
 
 

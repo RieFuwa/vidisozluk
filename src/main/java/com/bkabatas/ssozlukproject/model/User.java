@@ -27,7 +27,6 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     private String userName;
-    
     private String userMail;
     @JsonIgnore
     private String userPassword;

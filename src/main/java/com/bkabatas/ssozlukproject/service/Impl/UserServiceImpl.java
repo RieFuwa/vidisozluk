@@ -70,8 +70,8 @@ public class UserServiceImpl implements UserService {
 
          userRepository.save(toCreate);
         userCreateResponse.setMessage("User successfully created.");
+        userCreateResponse.setUserId(toCreate.getId());
         return new ResponseEntity<>(userCreateResponse, HttpStatus.CREATED);
-
     }
     @Override
     public Object addRoleToUser(Long userId, Long roleId) {
