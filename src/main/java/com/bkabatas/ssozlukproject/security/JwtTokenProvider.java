@@ -23,7 +23,7 @@ public class JwtTokenProvider {
 
     public String generateJwtToken( Authentication auth){
         JwtUserDetails userDetails = (JwtUserDetails) auth.getPrincipal();//Auth edecegimiz User
-        Date expireDate = new Date(new Date().getTime() + EXPIRES_IN);
+        Date expireDate = new Date(new Date().getTime() + 60*60*60);
         return Jwts.builder().setSubject((userDetails.getId().toString()))
                 //USER ID SI
                 .setIssuedAt(new Date()).setExpiration(expireDate)

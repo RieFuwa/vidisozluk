@@ -25,7 +25,6 @@ public class UserController {
     @PostMapping("/add")
     public  ResponseEntity<UserCreateResponse> createUser(@RequestBody UserCreateRequest userCreateRequest) {
         return userService.createUser(userCreateRequest);
-
     }
 
     @GetMapping("/getAll")
