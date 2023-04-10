@@ -29,11 +29,8 @@ public class LikeController {
         return new LikeDto(like);
     }
     @PostMapping("/add")
-    public ResponseEntity<Void> createLike(@RequestBody LikeCreateRequest newLike) {
-        Like like = likeService.createLike(newLike);
-        if(like != null)
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<LikeDto> createLike(@RequestBody LikeCreateRequest newLike) {
+       return likeService.createLike(newLike);
     }
     @DeleteMapping("/{likeId}")
     public String deleteLikeById(@PathVariable("likeId") Long likeId){

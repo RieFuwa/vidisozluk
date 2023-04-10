@@ -1,37 +1,33 @@
 package com.bkabatas.ssozlukproject.service.Impl;
 import com.bkabatas.ssozlukproject.dto.UserAuthDto;
-import com.bkabatas.ssozlukproject.dto.UserCreateResponse;
+import com.bkabatas.ssozlukproject.dto.UserCreateDto;
+import com.bkabatas.ssozlukproject.dto.UserUpdateDto;
 import com.bkabatas.ssozlukproject.model.Role;
 import com.bkabatas.ssozlukproject.model.User;
 import com.bkabatas.ssozlukproject.model.UserRefreshToken;
 import com.bkabatas.ssozlukproject.repository.RoleRepository;
 import com.bkabatas.ssozlukproject.repository.UserRepository;
+import com.bkabatas.ssozlukproject.request.UserUpdateRequest;
 import com.bkabatas.ssozlukproject.request.UserAuthRequest;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.request.UserRefreshRequest;
 import com.bkabatas.ssozlukproject.security.JwtTokenProvider;
 import com.bkabatas.ssozlukproject.service.UserService;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.InternetAddressEditor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -52,26 +48,34 @@ public class UserServiceImpl implements UserService {
     private UserRefreshTokenServiceImpl refreshTokenService;
 
 
+    private  JavaMailSender mailSender;
+
+    public UserServiceImpl(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+
     @Override
-    public ResponseEntity<UserCreateResponse> createUser(UserCreateRequest newUser) {
-        UserCreateResponse userCreateResponse = new UserCreateResponse();
+    public ResponseEntity<UserCreateDto> createUser(UserCreateRequest newUser) {
+        UserCreateDto userCreateDto = new UserCreateDto();
         User toCreate= new User();
         if(userRepository.findByUserMail(newUser.getUserMail()) != null) {
-            userCreateResponse.setMessage("Mail already in use.");
-            return new ResponseEntity<>(userCreateResponse,HttpStatus.BAD_REQUEST);
+            userCreateDto.setMessage("Mail already in use.");
+            return new ResponseEntity<>(userCreateDto,HttpStatus.BAD_REQUEST);
         }
         toCreate.setId(newUser.getId());
         toCreate.setUserName(newUser.getUserName());
         toCreate.setUserMail(newUser.getUserMail());
         toCreate.setRoles(new ArrayList<>());
         toCreate.setCreateDate(new Date());
+        toCreate.setUpdateDate(new Date());
         toCreate.setUserPassword(passwordEncoder.encode(newUser.getUserPassword()));
         toCreate.setIsVerified(newUser.getIsVerified());
 
          userRepository.save(toCreate);
-        userCreateResponse.setMessage("User successfully created.");
-        userCreateResponse.setUserId(toCreate.getId());
-        return new ResponseEntity<>(userCreateResponse, HttpStatus.CREATED);
+        userCreateDto.setMessage("User successfully created.");
+        userCreateDto.setUserId(toCreate.getId());
+        return new ResponseEntity<>(userCreateDto, HttpStatus.CREATED);
     }
     @Override
     public Object addRoleToUser(Long userId, Long roleId) {
@@ -106,14 +110,23 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User updateUserById(Long userId, User newUser) {
+    public ResponseEntity<UserUpdateDto> updateUserById(Long userId, UserUpdateRequest updateUser) {
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
         Optional<User> user =userRepository.findById(userId);
         if(user.isPresent()){
+           /* if(){
+
+            }*/
             User foundUser = user.get();
-            foundUser.setUserName(newUser.getUserName());
-            foundUser.setUserMail(newUser.getUserMail());
-            foundUser.setUserPassword(newUser.getUserPassword());
-            return userRepository.save(foundUser);
+            foundUser.getUserName();
+            foundUser.getUserMail();
+            foundUser.getIsVerified();
+            foundUser.getUserPassword();
+            foundUser.setUserPassword(passwordEncoder.encode(updateUser.getUserPassword()));
+            foundUser.setUpdateDate(new Date());
+            userUpdateDto.setMessage("User password changed.");
+            userUpdateDto.setUserId(foundUser.getId());
+            return new ResponseEntity<>(userUpdateDto, HttpStatus.CREATED);
         }else
             return null;
     }
@@ -124,7 +137,6 @@ public class UserServiceImpl implements UserService {
         UserRefreshToken token = refreshTokenService.getByUser(refreshRequest.getUserId());
         if(token.getToken().equals(refreshRequest.getRefreshToken()) &&
                 !refreshTokenService.isRefreshExpired(token)) {
-
             User user = token.getUser();
             String jwtToken = jwtTokenProvider.generateJwtTokenByUserId(user.getId());
             response.setMessage("token successfully refreshed.");
@@ -140,20 +152,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserAuthDto> registerUser(UserAuthRequest registerRequest) {
         UserAuthDto authResponse = new UserAuthDto();
-        /*if(userRepository.findByUserMail(registerRequest.getUserMail()) != null) {
-            authResponse.setMessage("Mail already in use.");
-            return new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
-        }*/
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(registerRequest.getUserMail(), registerRequest.getUserPassword());
         Authentication auth = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(auth);
         String jwtToken = jwtTokenProvider.generateJwtToken(auth);
+
         User user = userRepository.findByUserMail(registerRequest.getUserMail());
         authResponse.setMessage("User successfully registered.");
         authResponse.setAccessToken("Bearer " + jwtToken);
         authResponse.setRefreshToken(refreshTokenService.createRefreshToken(user));
         authResponse.setUserId(user.getId());
-        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+
+         if (user.getRoles().stream().anyMatch(key->"ROLE_ADMIN".equals(key.getRoleName()))){
+             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+             simpleMailMessage.setFrom("bedirhanboshesap@gmail.com");
+             simpleMailMessage.setTo("bedirhanboshesap@gmail.com");
+             simpleMailMessage.setSubject("VıdıSözlük Uygulamasına Admin Girişi yapıldı.");
+             simpleMailMessage.setText("VıdıSözlük Uygulamasına "+  new Date() +" tarihinde \n"+ user.getId()+" id'li kişi tarafından admin girişi yapıldı.");
+             this.mailSender.send(simpleMailMessage);
+             return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+         }
+
+       return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
+
     }
 
     @Override
