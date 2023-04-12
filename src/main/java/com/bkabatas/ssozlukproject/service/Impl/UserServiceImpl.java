@@ -108,27 +108,37 @@ public class UserServiceImpl implements UserService {
         return "User with id " +userId+ " has been deleted success.";
     }
 
-
     @Override
-    public ResponseEntity<UserUpdateDto> updateUserById(Long userId, UserUpdateRequest updateUser) {
-        UserUpdateDto userUpdateDto = new UserUpdateDto();
-        Optional<User> user =userRepository.findById(userId);
+    public String emailCheckUserById(String userMail) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByUserMail(userMail));
         if(user.isPresent()){
-           /* if(){
-
-            }*/
+            String url =  "http://localhost:3000/user/changepassword";
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setFrom("bedirhanboshesap@gmail.com");
+            simpleMailMessage.setTo(user.get().getUserMail());
+            simpleMailMessage.setSubject("VıdıSözlük Şifre Değiştirme Maili");
+            simpleMailMessage.setText("Şifre değiştirmek için "+ url +" linkine tıklayınız.");
+            this.mailSender.send(simpleMailMessage);
+            return "Şifre değiştirmek için girdiğiniz email adresine mail gönderilmiştir.";
+        }else
+            return "Girdiğiniz email bulunamadı.";
+    }
+    @Override
+    public ResponseEntity<UserUpdateDto> updateUserPasswordById(String userMail, UserUpdateRequest updateUser) {
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        Optional<User> user = Optional.ofNullable(userRepository.findByUserMail(userMail));
             User foundUser = user.get();
             foundUser.getUserName();
             foundUser.getUserMail();
             foundUser.getIsVerified();
-            foundUser.getUserPassword();
+            foundUser.getCreateDate();
             foundUser.setUserPassword(passwordEncoder.encode(updateUser.getUserPassword()));
             foundUser.setUpdateDate(new Date());
             userUpdateDto.setMessage("User password changed.");
             userUpdateDto.setUserId(foundUser.getId());
+            userRepository.save(foundUser);
             return new ResponseEntity<>(userUpdateDto, HttpStatus.CREATED);
-        }else
-            return null;
+
     }
 
     @Override
@@ -193,5 +203,7 @@ public class UserServiceImpl implements UserService {
 
         return authResponse;
     }
+
+
 
 }

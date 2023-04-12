@@ -90,6 +90,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/post/{postId}").permitAll()
                 .requestMatchers(HttpMethod.POST,"/user/add").permitAll()
                 .requestMatchers(HttpMethod.POST,"/role/addRoleToUser").permitAll()
+                .requestMatchers(HttpMethod.POST,"/user/emailCheck{userId}").permitAll()
+                .requestMatchers(HttpMethod.PUT,"/user/changePassword/{userMail}").permitAll()
+                .requestMatchers(HttpMethod.POST,"/user/emailCheck").permitAll()
                 .anyRequest().authenticated();
 
 

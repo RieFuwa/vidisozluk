@@ -21,7 +21,7 @@ public interface UserService {
 
     String deleteUserById(Long userId);
 
-    ResponseEntity<UserUpdateDto> updateUserById(Long userId, UserUpdateRequest newUser);
+    ResponseEntity<UserUpdateDto> updateUserPasswordById(String userMail, UserUpdateRequest newUser);
 
     Object addRoleToUser(Long userId, Long roleId);
     ResponseEntity<UserAuthDto> refreshUserToken(UserRefreshRequest refreshRequest);
@@ -29,4 +29,6 @@ public interface UserService {
     ResponseEntity<UserAuthDto> registerUser(UserAuthRequest registerRequest);
 
     UserAuthDto loginUser(UserAuthRequest loginRequest);
+
+    String emailCheckUserById(String userMail);
 }

@@ -44,10 +44,14 @@ public class UserController {
     }
 
 
-    @PutMapping("/{userId}") // USER ID SINE GORE GUNCELLEME
-    public ResponseEntity<UserUpdateDto> updateUserById(@PathVariable("userId") Long userId, @RequestBody UserUpdateRequest newUser){
-       return userService.updateUserById(userId,newUser);
+    @PostMapping("/emailCheck{userMail}") // USER ID SINE GORE GUNCELLEME
+    public String emailCheckUserById(@PathVariable("userMail") String userMail){
+       return userService.emailCheckUserById(userMail);
     }
 
+    @PutMapping("/changePassword/{userMail}") // USER ID SINE GORE GUNCELLEME
+    public ResponseEntity<UserUpdateDto> updateUserPasswordById(@PathVariable("userMail") String userMail, @RequestBody UserUpdateRequest newUser){
+        return userService.updateUserPasswordById(userMail,newUser);
+    }
 
 }
