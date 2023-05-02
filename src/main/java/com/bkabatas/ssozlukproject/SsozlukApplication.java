@@ -12,10 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableAutoConfiguration
 @EnableWebSecurity
 @ComponentScan
+
 public class SsozlukApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SsozlukApplication.class, args);
 	}
-
+	@Bean
+	PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 }

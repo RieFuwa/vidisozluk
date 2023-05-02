@@ -9,6 +9,7 @@ import com.bkabatas.ssozlukproject.repository.RoleRepository;
 import com.bkabatas.ssozlukproject.repository.UserRepository;
 import com.bkabatas.ssozlukproject.request.UserUpdateRequest;
 import com.bkabatas.ssozlukproject.request.UserAuthRequest;
+
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.request.UserRefreshRequest;
 import com.bkabatas.ssozlukproject.security.JwtTokenProvider;
@@ -25,6 +26,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -138,7 +140,6 @@ public class UserServiceImpl implements UserService {
             userUpdateDto.setUserId(foundUser.getId());
             userRepository.save(foundUser);
             return new ResponseEntity<>(userUpdateDto, HttpStatus.CREATED);
-
     }
 
     @Override

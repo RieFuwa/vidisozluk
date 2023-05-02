@@ -8,6 +8,7 @@ import com.bkabatas.ssozlukproject.request.UserAuthRequest;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.request.UserRefreshRequest;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface UserService {
     String deleteUserById(Long userId);
 
     ResponseEntity<UserUpdateDto> updateUserPasswordById(String userMail, UserUpdateRequest newUser);
+
 
     Object addRoleToUser(Long userId, Long roleId);
     ResponseEntity<UserAuthDto> refreshUserToken(UserRefreshRequest refreshRequest);
