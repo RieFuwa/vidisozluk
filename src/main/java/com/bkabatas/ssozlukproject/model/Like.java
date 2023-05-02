@@ -13,7 +13,7 @@ public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id ;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)

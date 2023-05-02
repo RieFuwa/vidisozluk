@@ -33,5 +33,7 @@ public class User {
     private Boolean isVerified;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateDate;
 
 }

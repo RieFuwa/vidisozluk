@@ -3,7 +3,7 @@ package com.bkabatas.ssozlukproject.dto;
 import lombok.Data;
 
 @Data
-public class UserCreateResponse {
+public class UserUpdateDto {
     private String message;
-
+    private Long userId;
 }

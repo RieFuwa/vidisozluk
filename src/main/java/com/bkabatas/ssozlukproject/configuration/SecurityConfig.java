@@ -77,9 +77,23 @@ public class SecurityConfig {
                 .and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(handler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/user/getAll").hasAnyAuthority("ROLE_ADMIN","ROLE_MANAGER")
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET,"/user/getAll").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET,"/report/getAllPostReports{postId}").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET,"/report/getAll").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET,"/post/getTodayPost").permitAll()
                 .requestMatchers(HttpMethod.POST,"/userAuth/**").permitAll()
-                .anyRequest().permitAll();
+                .requestMatchers(HttpMethod.GET,"/post/getAllPostTypePost{postTypeId}").permitAll()
+                .requestMatchers(HttpMethod.GET,"/post/postAnswers{connectedPostId}").permitAll()
+                .requestMatchers(HttpMethod.GET,"/post/getAllUserPost{userId}").permitAll()
+                .requestMatchers(HttpMethod.GET,"/user/{userId}").permitAll()
+                .requestMatchers(HttpMethod.GET,"/post/{postId}").permitAll()
+                .requestMatchers(HttpMethod.POST,"/user/add").permitAll()
+                .requestMatchers(HttpMethod.POST,"/role/addRoleToUser").permitAll()
+                .requestMatchers(HttpMethod.POST,"/user/emailCheck{userId}").permitAll()
+                .requestMatchers(HttpMethod.PUT,"/user/changePassword/{userMail}").permitAll()
+                .requestMatchers(HttpMethod.POST,"/user/emailCheck").permitAll()
+                .anyRequest().authenticated();
 
 
         httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
