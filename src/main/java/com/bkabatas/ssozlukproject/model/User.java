@@ -6,7 +6,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class User {
     })
     @JoinColumn(name = "role_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-
     private List<Role> roles = new ArrayList<>();
 
     private String userName;
@@ -35,5 +33,7 @@ public class User {
     private Boolean isVerified;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateDate;
 
 }

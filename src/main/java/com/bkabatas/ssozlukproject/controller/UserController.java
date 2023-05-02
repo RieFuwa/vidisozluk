@@ -1,11 +1,12 @@
 package com.bkabatas.ssozlukproject.controller;
-import com.bkabatas.ssozlukproject.dto.UserDto;
+import com.bkabatas.ssozlukproject.dto.UserCreateDto;
+import com.bkabatas.ssozlukproject.dto.UserUpdateDto;
 import com.bkabatas.ssozlukproject.model.User;
-import com.bkabatas.ssozlukproject.request.AddRoleByUserCreateRequest;
+import com.bkabatas.ssozlukproject.request.UserUpdateRequest;
 import com.bkabatas.ssozlukproject.request.UserCreateRequest;
 import com.bkabatas.ssozlukproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -18,40 +19,39 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<Void> createUser(@RequestBody UserCreateRequest newUser) {
-        User user = userService.createUser(newUser);
-        if(user != null)
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public  ResponseEntity<UserCreateDto> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+        return userService.createUser(userCreateRequest);
     }
-   /* @PostMapping("/addRoleToUser")
-    public ResponseEntity<Void> addRoleToUser(@RequestBody AddRoleByUserCreateRequest addRoleByUserCreateRequest) {
-        User user = userService.addRoleToUser(addRoleByUserCreateRequest);
-        if(user != null)
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
+
     @GetMapping("/getAll")
+    @Cacheable(value = "User")
     public List<User> getAllUser(){
         return userService.getAllUser();
     }
 
+    /* unless = #userId<10*/
     @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable("userId")Long userId){
-        User user= userService.getUserById(userId);
-        return new UserDto(user);
+    @Cacheable(key = "#userId",value = "User")
+    public User getUserById(@PathVariable("userId")Long userId){
+        return userService.getUserById(userId);
     }
+
+
 
     @DeleteMapping("/{userId}") //USER ID SINE GORE SILME
     public String deleteUserById(@PathVariable("userId") Long userId){
         return userService.deleteUserById(userId);
     }
-    @PutMapping("/{userId}") // USER ID SINE GORE GUNCELLEME
-    public ResponseEntity<Void> updateUserById(@PathVariable("userId") Long userId, @RequestBody User newUser){
-        User user = userService.updateUserById(userId,newUser);
-        if(user != null)
-            return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+    @PostMapping("/emailCheck{userMail}") // USER ID SINE GORE GUNCELLEME
+    public String emailCheckUserById(@PathVariable("userMail") String userMail){
+       return userService.emailCheckUserById(userMail);
+    }
+
+    @PutMapping("/changePassword/{userMail}") // USER ID SINE GORE GUNCELLEME
+    public ResponseEntity<UserUpdateDto> updateUserPasswordById(@PathVariable("userMail") String userMail, @RequestBody UserUpdateRequest newUser){
+        return userService.updateUserPasswordById(userMail,newUser);
     }
 
 }

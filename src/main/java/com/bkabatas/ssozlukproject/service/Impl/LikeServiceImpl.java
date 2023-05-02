@@ -1,6 +1,7 @@
 package com.bkabatas.ssozlukproject.service.Impl;
 
 import com.bkabatas.ssozlukproject.dto.LikeDto;
+import com.bkabatas.ssozlukproject.dto.PostDto;
 import com.bkabatas.ssozlukproject.model.Like;
 import com.bkabatas.ssozlukproject.model.Post;
 import com.bkabatas.ssozlukproject.model.User;
@@ -10,9 +11,12 @@ import com.bkabatas.ssozlukproject.service.LikeService;
 import com.bkabatas.ssozlukproject.service.PostService;
 import com.bkabatas.ssozlukproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,18 +37,23 @@ public class LikeServiceImpl implements LikeService {
 
 
     @Override
-    public Like createLike(LikeCreateRequest newLike) {
+    public ResponseEntity<LikeDto> createLike(LikeCreateRequest newLike) {
+
         Post post = postService.getPostById(newLike.getPostId());
         User user = userService.getUserById(newLike.getUserId());
-
-        if(user == null && post == null)
+        PostDto postDto = postService.getOnePostByIdWithLikes(newLike.getPostId());
+        if(user != null && post != null && postDto.getLikeList().stream().filter(key-> Objects.equals(key.getUserId(),user.getId())).collect(Collectors.toList()).isEmpty() )
+        {
+            Like toCreate = new Like();
+            toCreate.setId(newLike.getId());
+            toCreate.setUser(user);
+            toCreate.setPost(post);
+            likeRepository.save(toCreate);
+            LikeDto likeDto = new LikeDto(toCreate);
+            return  new ResponseEntity<>(likeDto, HttpStatus.CREATED);
+        }else
             return null;
-        Like toCreate = new Like();
-        toCreate.setId(newLike.getId());
-        toCreate.setUser(user);
-        toCreate.setPost(post);
 
-        return likeRepository.save(toCreate);
     }
 
     @Override

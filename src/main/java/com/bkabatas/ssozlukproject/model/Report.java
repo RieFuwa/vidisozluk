@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "reports")
@@ -26,5 +29,6 @@ public class Report {
     @JsonIgnore
     private Post post;
 
+    private Date createDate;
     private String reportText;
 }
