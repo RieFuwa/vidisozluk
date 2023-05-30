@@ -130,10 +130,7 @@ public class UserServiceImpl implements UserService {
         UserUpdateDto userUpdateDto = new UserUpdateDto();
         Optional<User> user = Optional.ofNullable(userRepository.findByUserMail(userMail));
             User foundUser = user.get();
-            foundUser.getUserName();
-            foundUser.getUserMail();
-            foundUser.getIsVerified();
-            foundUser.getCreateDate();
+ 
             foundUser.setUserPassword(passwordEncoder.encode(updateUser.getUserPassword()));
             foundUser.setUpdateDate(new Date());
             userUpdateDto.setMessage("User password changed.");
